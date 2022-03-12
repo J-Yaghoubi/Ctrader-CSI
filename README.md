@@ -6,7 +6,7 @@ Overbought/Oversold, Convergence and Divergence, Money flow direction, and Curve
 
 Be aware that there is not a single method to calculate currency strength, So you may see some differences between the various versions of CSI's.    
 
-Our approach in this tool is looking at 28 different pairs and calculating the strenght of 8 major currencies through calculating the ratio of bodies to the length of candles over the special periods:     
+Our approach in this tool is looking at 28 different pairs and calculating the strength of 8 major currencies through calculating the ratio of bodies to the length of candles over the special periods:     
 (Close - Open) / (High - Low) over a special period  
 
 In this tool, you can choose which currency you want to be reported. The colors are adjustable and the report is based on the current chart timeframe.
