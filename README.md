@@ -15,7 +15,7 @@ In this tool, you can choose which currency you want to be reported. The colors 
 Just copy the indicator(CSI.algo) from Compiled Directory to your PC and double-click on it. It will install automatically on your Ctrader-Platform. You can also download it directly from the Ctrader network:
 
 
-Ctrader Developer Network    
+<a href="https://ctrader.com/algos/indicators/show/2965" title="CSI">Ctrader Developer Network</a>
 
 
 
