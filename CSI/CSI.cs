@@ -1,8 +1,24 @@
-﻿using System;
+﻿
+////////////////////////////////////////////////////////////////////////////////////////
+///                                         CSI                                      ///
+///                       (Strength Index of 8 Major Forex Currencies)               ///
+///                                                                                  ///
+///         Publish date  1-MARCH-2022                                               ///
+///         Version  1.0.0                                                           ///
+///         By  Seyed Jafar Yaghoubi                                                 ///
+///         License  MIT                                                             ///
+///         More info https://github.com/J-Yaghoubi/                                 ///
+///         Contact  algo3xp3rt@gmail.com                                            ///
+///                                                                                  ///
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+using System;
 using cAlgo.API;
 using cAlgo.API.Internals;
 using cAlgo.API.Indicators;
 using cAlgo.Indicators;
+using System.Text;
 
 namespace cAlgo
 {
@@ -12,23 +28,28 @@ namespace cAlgo
 
         #region parameters
 
-        [Parameter(DefaultValue = 14, Group = "Key Settings")]
+        [Parameter("Period", DefaultValue = 14, MinValue = 1, Group = "General Settings")]
         public int Period { get; set; }
 
+        [Parameter("Show Values", DefaultValue = true, Group = "General Settings")]
+        public bool valuePrint { get; set; }
 
-        [Parameter("AUD Enable", DefaultValue = false, Group = "Enable/Disable")]
+        [Parameter("Values Color", DefaultValue = "FF7030A0", Group = "General Settings")]
+        public Colors valueColor { get; set; }
+
+        [Parameter("AUD Enable", DefaultValue = true, Group = "Enable/Disable")]
         public bool audEnable { get; set; }
 
-        [Parameter("NZD Enable", DefaultValue = false, Group = "Enable/Disable")]
+        [Parameter("NZD Enable", DefaultValue = true, Group = "Enable/Disable")]
         public bool nzdEnable { get; set; }
 
-        [Parameter("JPY Enable", DefaultValue = false, Group = "Enable/Disable")]
+        [Parameter("JPY Enable", DefaultValue = true, Group = "Enable/Disable")]
         public bool jpyEnable { get; set; }
 
-        [Parameter("GBP Enable", DefaultValue = false, Group = "Enable/Disable")]
+        [Parameter("GBP Enable", DefaultValue = true, Group = "Enable/Disable")]
         public bool gbpEnable { get; set; }
 
-        [Parameter("CHF Enable", DefaultValue = false, Group = "Enable/Disable")]
+        [Parameter("CHF Enable", DefaultValue = true, Group = "Enable/Disable")]
         public bool chfEnable { get; set; }
 
         [Parameter("EUR Enable", DefaultValue = true, Group = "Enable/Disable")]
@@ -37,33 +58,33 @@ namespace cAlgo
         [Parameter("USD Enable", DefaultValue = true, Group = "Enable/Disable")]
         public bool usdEnable { get; set; }
 
-        [Parameter("CAD Enable", DefaultValue = false, Group = "Enable/Disable")]
+        [Parameter("CAD Enable", DefaultValue = true, Group = "Enable/Disable")]
         public bool cadEnable { get; set; }
 
 
         [Output("AUD", LineColor = "FF33C1F3")]
-        public IndicatorDataSeries ResultAUD { get; set; }
+        public IndicatorDataSeries _audSI { get; set; }
 
         [Output("NZD", LineColor = "FF0071C1")]
-        public IndicatorDataSeries ResultNZD { get; set; }
+        public IndicatorDataSeries _nzdSI { get; set; }
 
         [Output("JPY", LineColor = "FF7030A0")]
-        public IndicatorDataSeries ResultJPY { get; set; }
+        public IndicatorDataSeries _jpySI { get; set; }
 
         [Output("GBP", LineColor = "FF805F00")]
-        public IndicatorDataSeries ResultGBP { get; set; }
+        public IndicatorDataSeries _gbpSI { get; set; }
 
         [Output("CHF", LineColor = "FF008000")]
-        public IndicatorDataSeries ResultCHF { get; set; }
+        public IndicatorDataSeries _chfSI { get; set; }
 
         [Output("EUR", LineColor = "FFFFFF01")]
-        public IndicatorDataSeries ResultEUR { get; set; }
+        public IndicatorDataSeries _eurSI { get; set; }
 
         [Output("USD", LineColor = "FFFFFFFF")]
-        public IndicatorDataSeries ResultUSD { get; set; }
+        public IndicatorDataSeries _usdSI { get; set; }
 
         [Output("CAD", LineColor = "FFFF3334")]
-        public IndicatorDataSeries ResultCAD { get; set; }
+        public IndicatorDataSeries _cadSI { get; set; }
 
         #endregion
 
@@ -73,6 +94,8 @@ namespace cAlgo
         private Bars EURAUD, EURNZD, EURJPY, EURGBP, EURCHF, EURCAD, EURUSD, AUDUSD, NZDUSD, USDJPY,
         GBPUSD, USDCHF, USDCAD, AUDJPY, NZDJPY, GBPJPY, CHFJPY, CADJPY, GBPAUD, GBPNZD,
         GBPCHF, GBPCAD, AUDNZD, NZDCHF, NZDCAD, AUDCHF, AUDCAD, CADCHF;
+
+        StringBuilder Display_TEXT;
 
         #endregion
 
@@ -188,6 +211,8 @@ namespace cAlgo
             if (index < Period)
                 return;
 
+            Display_TEXT = new StringBuilder();
+
             if (audEnable)
             {
                 Bars[] pairs = 
@@ -202,7 +227,9 @@ namespace cAlgo
                 };
 
                 var currencyIndex = Math.Round(CalculateStrength(index, pairs, "AUD"), 0);
-                ResultAUD[index] = currencyIndex;
+                _audSI[index] = currencyIndex;
+                Display_TEXT.Append("AUD  " + _audSI[index].ToString());
+                Display_TEXT.AppendLine();
             }
 
             if (nzdEnable)
@@ -219,7 +246,9 @@ namespace cAlgo
                 };
 
                 var currencyIndex = Math.Round(CalculateStrength(index, pairs, "NZD"), 0);
-                ResultNZD[index] = currencyIndex;
+                _nzdSI[index] = currencyIndex;
+                Display_TEXT.Append("NZD  " + _nzdSI[index].ToString());
+                Display_TEXT.AppendLine();
             }
 
             if (jpyEnable)
@@ -236,7 +265,9 @@ namespace cAlgo
                 };
 
                 var currencyIndex = Math.Round(CalculateStrength(index, pairs, "JPY"), 0);
-                ResultJPY[index] = currencyIndex;
+                _jpySI[index] = currencyIndex;
+                Display_TEXT.Append("JPY  " + _jpySI[index].ToString());
+                Display_TEXT.AppendLine();
             }
 
             if (gbpEnable)
@@ -253,7 +284,9 @@ namespace cAlgo
                 };
 
                 var currencyIndex = Math.Round(CalculateStrength(index, pairs, "GBP"), 0);
-                ResultGBP[index] = currencyIndex;
+                _gbpSI[index] = currencyIndex;
+                Display_TEXT.Append("GBP  " + _gbpSI[index].ToString());
+                Display_TEXT.AppendLine();
             }
 
             if (chfEnable)
@@ -270,7 +303,9 @@ namespace cAlgo
                 };
 
                 var currencyIndex = Math.Round(CalculateStrength(index, pairs, "CHF"), 0);
-                ResultCHF[index] = currencyIndex;
+                _chfSI[index] = currencyIndex;
+                Display_TEXT.Append("CHF  " + _chfSI[index].ToString());
+                Display_TEXT.AppendLine();
             }
 
             if (eurEnable)
@@ -287,7 +322,9 @@ namespace cAlgo
                 };
 
                 var currencyIndex = Math.Round(CalculateStrength(index, pairs, "EUR"), 0);
-                ResultEUR[index] = currencyIndex;
+                _eurSI[index] = currencyIndex;
+                Display_TEXT.Append("EUR  " + _eurSI[index].ToString());
+                Display_TEXT.AppendLine();
             }
 
             if (usdEnable)
@@ -304,7 +341,9 @@ namespace cAlgo
                 };
 
                 var currencyIndex = Math.Round(CalculateStrength(index, pairs, "USD"), 0);
-                ResultUSD[index] = currencyIndex;
+                _usdSI[index] = currencyIndex;
+                Display_TEXT.Append("USD  " + _usdSI[index].ToString());
+                Display_TEXT.AppendLine();
             }
 
             if (cadEnable)
@@ -321,8 +360,16 @@ namespace cAlgo
                 };
 
                 var currencyIndex = Math.Round(CalculateStrength(index, pairs, "CAD"), 0);
-                ResultCAD[index] = currencyIndex;
+                _cadSI[index] = currencyIndex;
+                Display_TEXT.Append("CAD  " + _cadSI[index].ToString());
+                Display_TEXT.AppendLine();
             }
+
+
+            if (valuePrint)
+                ChartObjects.DrawText("Values", Display_TEXT.ToString(), StaticPosition.BottomRight, valueColor);
+
+            ChartObjects.DrawText("Copyright", "ⒸS.J.Yaghoubi", StaticPosition.BottomLeft, Colors.Gray);
 
         }
 
@@ -358,9 +405,7 @@ double[] pairStrength =
                 // calculate the strength
 
                 for (int j = 0; j < Period; j++)
-                {
                     pairStrength[i] += (currency[i].ClosePrices[index2 - j] - currency[i].OpenPrices[index2 - j]) / (currency[i].HighPrices[index2 - j] - currency[i].LowPrices[index2 - j]);
-                }
             }
 
             // Calculate overall strength:
@@ -371,14 +416,9 @@ double[] pairStrength =
             for (int i = 0; i < currency.Length; i++)
             {
                 if (currency[i].ToString().Substring(0, 3) == baseCurrency)
-                {
                     total += pairStrength[i];
-                }
                 else
-                {
                     total -= pairStrength[i];
-                }
-
             }
 
             // Return result
@@ -395,10 +435,12 @@ double[] pairStrength =
                 if (time == series.OpenTimes[i])
                     return i;
             }
+
             return -1;
         }
 
         #endregion
+
 
 
     }
